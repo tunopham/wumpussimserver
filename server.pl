@@ -95,5 +95,5 @@ handle_action_request(Request) :-
 
     reply_json_dict(_{
         hunterState: "",
-        action: """
+        action: ""
     }).
