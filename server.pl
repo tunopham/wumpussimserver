@@ -33,6 +33,7 @@ run :-
 :- http_handler(root(init), handle_init_request, []).
 :- http_handler(root(default), handle_default_request, []).
 :- http_handler(root(sim), handle_sim_request, []).
+:- http_handler(root(action), handle_action_request, []).
 
 handle_default_request(Request) :-
     option(method(options), Request), !,
@@ -78,4 +79,21 @@ handle_sim_request(Request) :-
     cors_enable,
     reply_json_dict(_{fluents: NewFluents, percepts: Percepts}).
 
-    
+handle_action_request(Request) :-
+    option(method(options), Request),
+    !,
+    cors_enable(Request, [
+        methods([put]),
+        request_headers(['content-type'])
+    ]),
+    format('Content-type: text/plain~n~n').
+
+handle_action_request(Request) :-
+    http_read_json_dict(Request, RequestJSON),
+    cors_enable,
+    http_log('DEBUG: Received JSON: ~q~n', [RequestJSON]),
+
+    reply_json_dict(_{
+        hunterState: "",
+        action: """
+    }).
